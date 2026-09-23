@@ -8,242 +8,261 @@
 <title>Super Mario World</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-    }
+* {
+    box-sizing: border-box;
+}
 
-    html, body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        background: #080808;
-        overflow: hidden;
-    }
+html, body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    background: #080808;
+    overflow: hidden;
+}
 
-    body {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
-    /* Main game area */
+/* GAME CONTAINER */
+#game-container {
+    position: relative;
+
+    width: min(780px, 100vw);
+    aspect-ratio: 780 / 600;
+
+    background: #000;
+    overflow: hidden;
+
+    box-shadow:
+        0 0 0 1px rgba(255,255,255,0.08),
+        0 10px 40px rgba(0,0,0,0.6);
+}
+
+/* GAME */
+#game-frame {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    display: block;
+}
+
+/* CONTROLS */
+#controls {
+    position: absolute;
+
+    right: 14px;
+    bottom: 14px;
+
+    display: flex;
+    gap: 8px;
+
+    opacity: 0;
+
+    transform: translateY(5px);
+
+    transition:
+        opacity 0.2s ease,
+        transform 0.2s ease;
+
+    z-index: 20;
+}
+
+#game-container:hover #controls {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* GENERAL BUTTON */
+.control-button {
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 7px;
+
+    background: rgba(15,15,15,0.9);
+    color: white;
+
+    cursor: pointer;
+
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+
+    backdrop-filter: blur(8px);
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
+}
+
+.control-button:hover {
+    background: rgba(45,45,45,0.95);
+    transform: scale(1.04);
+}
+
+.control-button:active {
+    transform: scale(0.97);
+}
+
+/* NORMAL FULLSCREEN BUTTON */
+#fullscreen-button {
+    width: 46px;
+}
+
+/* PLAY FULLSCREEN BUTTON */
+#play-fullscreen-button {
+    padding: 0 15px;
+
+    gap: 8px;
+
+    font-weight: 600;
+}
+
+/* FULLSCREEN ICON */
+.fullscreen-icon {
+    width: 18px;
+    height: 18px;
+
+    position: relative;
+}
+
+.fullscreen-icon::before {
+    content: "";
+
+    position: absolute;
+
+    left: 1px;
+    top: 1px;
+
+    width: 7px;
+    height: 7px;
+
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+}
+
+.fullscreen-icon::after {
+    content: "";
+
+    position: absolute;
+
+    right: 1px;
+    bottom: 1px;
+
+    width: 7px;
+    height: 7px;
+
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+/* EXIT ICON */
+.exit-icon {
+    width: 18px;
+    height: 18px;
+
+    position: relative;
+}
+
+.exit-icon::before {
+    content: "";
+
+    position: absolute;
+
+    left: 1px;
+    top: 1px;
+
+    width: 7px;
+    height: 7px;
+
+    border-top: 2px solid white;
+    border-left: 2px solid white;
+}
+
+.exit-icon::after {
+    content: "";
+
+    position: absolute;
+
+    right: 1px;
+    bottom: 1px;
+
+    width: 7px;
+    height: 7px;
+
+    border-right: 2px solid white;
+    border-bottom: 2px solid white;
+}
+
+/* EXIT BUTTON */
+#exit-button {
+    width: 46px;
+
+    display: none;
+}
+
+/* TRUE FULLSCREEN */
+#game-container:fullscreen {
+    width: 100vw;
+    height: 100vh;
+
+    aspect-ratio: auto;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #000;
+}
+
+#game-container:fullscreen #game-frame {
+    position: relative;
+
+    width: min(100vw, 1300px);
+    height: min(100vh, 1000px);
+
+    aspect-ratio: 780 / 600;
+
+    flex: 0 0 auto;
+}
+
+#game-container:fullscreen #controls {
+    opacity: 1;
+    transform: translateY(0);
+
+    position: fixed;
+
+    right: 20px;
+    bottom: 20px;
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+
     #game-container {
-        position: relative;
-
-        /* Original emulator ratio: 780 × 600 */
-        width: min(780px, 100vw);
-        aspect-ratio: 780 / 600;
-
-        background: #000;
-        overflow: hidden;
-
-        box-shadow:
-            0 0 0 1px rgba(255,255,255,0.08),
-            0 10px 40px rgba(0,0,0,0.6);
-    }
-
-    /* Emulator */
-    #game-frame {
-        position: absolute;
-        inset: 0;
-
-        width: 100%;
-        height: 100%;
-
-        border: 0;
-        display: block;
-    }
-
-    /* Control area */
-    #controls {
-        position: absolute;
-
-        right: 14px;
-        bottom: 14px;
-
-        display: flex;
-        gap: 8px;
-
-        opacity: 0;
-
-        transition:
-            opacity 0.2s ease,
-            transform 0.2s ease;
-
-        transform: translateY(5px);
-
-        z-index: 20;
-    }
-
-    #game-container:hover #controls {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    /* Buttons */
-    .control-button {
-        width: 46px;
-        height: 42px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        border: 1px solid rgba(255,255,255,0.18);
-        border-radius: 7px;
-
-        background: rgba(15,15,15,0.88);
-        color: white;
-
-        cursor: pointer;
-
-        backdrop-filter: blur(8px);
-
-        transition:
-            background 0.15s ease,
-            transform 0.15s ease;
-    }
-
-    .control-button:hover {
-        background: rgba(45,45,45,0.95);
-        transform: scale(1.05);
-    }
-
-    .control-button:active {
-        transform: scale(0.96);
-    }
-
-    /* Controller-style fullscreen icon */
-    .fullscreen-icon {
-        width: 21px;
-        height: 17px;
-
-        position: relative;
-    }
-
-    .fullscreen-icon::before,
-    .fullscreen-icon::after {
-        content: "";
-        position: absolute;
-        inset: 0;
-    }
-
-    /* Corner brackets */
-    .fullscreen-icon::before {
-        border-top: 2px solid white;
-        border-left: 2px solid white;
-
-        width: 8px;
-        height: 8px;
-
-        top: 0;
-        left: 0;
-
-        box-shadow:
-            11px 0 0 -1px transparent,
-            0 7px 0 -1px transparent;
-    }
-
-    .fullscreen-icon::after {
-        border-bottom: 2px solid white;
-        border-right: 2px solid white;
-
-        width: 8px;
-        height: 8px;
-
-        right: 0;
-        bottom: 0;
-    }
-
-    /* Exit fullscreen icon */
-    .exit-icon {
-        width: 19px;
-        height: 19px;
-        position: relative;
-    }
-
-    .exit-icon::before,
-    .exit-icon::after {
-        content: "";
-        position: absolute;
-        width: 8px;
-        height: 8px;
-    }
-
-    .exit-icon::before {
-        top: 1px;
-        left: 1px;
-
-        border-top: 2px solid white;
-        border-left: 2px solid white;
-    }
-
-    .exit-icon::after {
-        bottom: 1px;
-        right: 1px;
-
-        border-bottom: 2px solid white;
-        border-right: 2px solid white;
-    }
-
-    /* Fullscreen mode */
-    #game-container:fullscreen {
         width: 100vw;
-        height: 100vh;
-
-        aspect-ratio: auto;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: #000;
     }
 
-    /*
-       Keep the original game aspect ratio.
-       The iframe scales until it reaches either
-       the screen width or screen height.
-    */
-    #game-container:fullscreen #game-frame {
-        position: relative;
-
-        width: min(100vw, 1300px);
-        height: min(100vh, 1000px);
-
-        aspect-ratio: 780 / 600;
-
-        flex: 0 0 auto;
-    }
-
-    /* Make sure the controls stay visible in fullscreen */
-    #game-container:fullscreen #controls {
+    #controls {
         opacity: 1;
-        transform: translateY(0);
-
-        position: fixed;
-
-        right: 20px;
-        bottom: 20px;
+        transform: none;
     }
 
-    /* Mobile */
-    @media (max-width: 600px) {
-
-        #game-container {
-            width: 100vw;
-        }
-
-        #controls {
-            opacity: 1;
-            transform: none;
-        }
-
-        .control-button {
-            width: 44px;
-            height: 40px;
-        }
+    #play-fullscreen-button {
+        padding: 0 12px;
     }
+}
 </style>
 
 </head>
@@ -256,28 +275,40 @@
 <iframe
     id="game-frame"
     src="https://supernintendoemulator.com/game/?game=Super_Mario_World"
-    allow="fullscreen"
+    allow="fullscreen; autoplay"
     allowfullscreen>
 </iframe>
 
 <div id="controls">
 
+    <!-- GOOGLE SITES FULLSCREEN -->
+    <button
+        id="play-fullscreen-button"
+        class="control-button"
+        title="Open fullscreen game">
+
+        <span class="fullscreen-icon"></span>
+        <span>PLAY FULLSCREEN</span>
+
+    </button>
+
+    <!-- NORMAL FULLSCREEN -->
     <button
         id="fullscreen-button"
         class="control-button"
-        aria-label="Enter fullscreen"
-        title="Fullscreen">
+        title="Fullscreen"
+        aria-label="Fullscreen">
 
         <span class="fullscreen-icon"></span>
 
     </button>
 
+    <!-- EXIT -->
     <button
         id="exit-button"
         class="control-button"
-        aria-label="Exit fullscreen"
-        title="Exit Fullscreen"
-        style="display:none;">
+        title="Exit fullscreen"
+        aria-label="Exit fullscreen">
 
         <span class="exit-icon"></span>
 
@@ -290,40 +321,81 @@
 
 <script>
 
-const container = document.getElementById("game-container");
-const fullscreenButton = document.getElementById("fullscreen-button");
-const exitButton = document.getElementById("exit-button");
+const container =
+    document.getElementById("game-container");
+
+const fullscreenButton =
+    document.getElementById("fullscreen-button");
+
+const exitButton =
+    document.getElementById("exit-button");
+
+const playFullscreenButton =
+    document.getElementById("play-fullscreen-button");
 
 
-/* Enter fullscreen */
+/*
+    IMPORTANT:
+
+    This is your GitHub Pages URL.
+
+    The button opens THIS page directly,
+    outside of Google Sites.
+*/
+
+const fullscreenPage =
+    "https://wyattjc06-wq.github.io/wyattjc06-wq.github.io-mario-emulator-/";
+
+
+/* GOOGLE SITES PLAY FULLSCREEN BUTTON */
+
+playFullscreenButton.addEventListener("click", () => {
+
+    window.open(
+        fullscreenPage,
+        "_blank",
+        "noopener,noreferrer"
+    );
+
+});
+
+
+/* NORMAL FULLSCREEN */
+
 fullscreenButton.addEventListener("click", () => {
 
     if (container.requestFullscreen) {
-        container.requestFullscreen();
-    }
 
-    else if (container.webkitRequestFullscreen) {
+        container.requestFullscreen();
+
+    } else if (container.webkitRequestFullscreen) {
+
         container.webkitRequestFullscreen();
+
     }
 
 });
 
 
-/* Exit fullscreen */
+/* EXIT FULLSCREEN */
+
 exitButton.addEventListener("click", () => {
 
     if (document.exitFullscreen) {
-        document.exitFullscreen();
-    }
 
-    else if (document.webkitExitFullscreen) {
+        document.exitFullscreen();
+
+    } else if (document.webkitExitFullscreen) {
+
         document.webkitExitFullscreen();
+
     }
 
 });
 
 
-/* Update buttons */
+/* UPDATE BUTTONS */
+
 function updateFullscreenButtons() {
 
     const fullscreenElement =
@@ -333,22 +405,30 @@ function updateFullscreenButtons() {
     const isFullscreen =
         fullscreenElement === container;
 
+
     if (isFullscreen) {
 
         fullscreenButton.style.display = "none";
+
         exitButton.style.display = "flex";
+
+        playFullscreenButton.style.display = "none";
 
     } else {
 
         fullscreenButton.style.display = "flex";
+
         exitButton.style.display = "none";
+
+        playFullscreenButton.style.display = "flex";
 
     }
 
 }
 
 
-/* Browser fullscreen changes */
+/* LISTEN FOR FULLSCREEN CHANGES */
+
 document.addEventListener(
     "fullscreenchange",
     updateFullscreenButtons
