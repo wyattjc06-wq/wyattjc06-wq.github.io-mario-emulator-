@@ -1,1 +1,1 @@
-# wyattjc06-wq.github.io-mario-emulator-
+This page is solely a repository page for a google site.
